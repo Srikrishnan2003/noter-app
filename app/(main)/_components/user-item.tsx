@@ -27,7 +27,7 @@ export const UserItem = () => {
                             <AvatarImage src={user?.imageUrl} />
                         </Avatar>
                         <span className="text-start font-medium line-clamp-1">
-                            {user?.fullName}'s Noter
+                            {user?.fullName}&aposs Noter
                         </span>
 
                     </div>
@@ -52,7 +52,7 @@ export const UserItem = () => {
                         </div>
                         <div className="space-y-1">
                             <p className="text-sm line-clamp-1">
-                                {user?.fullName}'s Noter
+                                {user?.fullName}&aposs Noter
                             </p>
                         </div>
                     </div>
