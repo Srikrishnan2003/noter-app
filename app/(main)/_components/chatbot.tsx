@@ -24,7 +24,7 @@ const Chatbot: React.FC = () => {
         // Do something with the input locally, for example, store it in state
         setReceivedMessage(inputValue);
 
-        const corsProxyUrl = 'https://proxy.cors.sh/';
+        const corsProxyUrl = 'https://api.allorigins.win/get?';
         const apiUrl = `https://utilapi.geeksforgeeks.org/api/gfgsearch/?page=1&sort=relevance&type=premium&query=${inputValue}&search_type=google`;
 
         fetch(corsProxyUrl + apiUrl)
