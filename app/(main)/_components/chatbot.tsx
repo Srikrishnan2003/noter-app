@@ -25,9 +25,9 @@ const Chatbot: React.FC = () => {
         setReceivedMessage(inputValue);
 
        // const corsProxyUrl = 'https://api.allorigins.win/get?';
-       // const apiUrl = `https://utilapi.geeksforgeeks.org/api/gfgsearch/?page=1&sort=relevance&type=premium&query=${inputValue}&search_type=google`;
+       const apiUrl = `https://utilapi.geeksforgeeks.org/api/gfgsearch/?page=1&sort=relevance&type=premium&query=${inputValue}&search_type=google`;
 
-        fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://utilapi.geeksforgeeks.org/api/gfgsearch/?page=1&sort=relevance&type=premium&query=${inputValue}&search_type=google')}`)
+        fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`)
         .then(response => response.json())
         .then(data => {
             // Check if 'items' key exists and has at least one item
