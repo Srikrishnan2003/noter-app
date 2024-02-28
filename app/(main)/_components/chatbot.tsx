@@ -20,34 +20,36 @@ const Chatbot: React.FC = () => {
     };
     
 
-   const handleSendMessage = async (e: FormEvent) => {
-    e.preventDefault();
+    const handleSendMessage = async (e: FormEvent) => {
+        e.preventDefault();
+        
+        // Do something with the input locally, for example, store it in state
+        setReceivedMessage(inputValue);
 
-    // Do something with the input locally, for example, store it in state
-    setReceivedMessage(inputValue);
+       // const corsProxyUrl = 'https://api.allorigins.win/get?';
+       const apiUrl = `https://utilapi.geeksforgeeks.org/api/gfgsearch/?page=1&sort=relevance&type=premium&query=${inputValue}&search_type=google`;
 
-    const apiUrl = `https://utilapi.geeksforgeeks.org/api/gfgsearch/?page=1&sort=relevance&type=premium&query=${inputValue}&search_type=google`;
+        fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Check if 'items' key exists and has at least one item
+            if (data.response && data.response.items && data.response.items.length > 0) {
+                // Access the formattedUrl of the first item
+                const formattedUrl = data.response.items[0].formattedUrl;
 
-    try {
-        const response = await axios.get(apiUrl);
+                // Open the URL in a new window
+                window.open(formattedUrl);
+            } else {
+                console.error('No relevant items found in the response.');
+            }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    
 
-        // Check if 'items' key exists and has at least one item
-        if (response.data.response && response.data.response.items && response.data.response.items.length > 0) {
-            // Access the formattedUrl of the first item
-            const formattedUrl = response.data.response.items[0].formattedUrl;
+        // Optionally, you can clear the input value if needed
+        setInputValue('');
+    };
 
-            // Open the URL in a new window
-            window.open(formattedUrl);
-        } else {
-            console.error('No relevant items found in the response.');
-        }
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-
-    // Optionally, you can clear the input value if needed
-    setInputValue('');
-};
 
     useEffect(() => {
         // This effect will run whenever receivedMessage changes
