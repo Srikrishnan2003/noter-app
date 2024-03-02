@@ -192,7 +192,7 @@ const Chatbot: React.FC = () => {
                         ))}
                             
                         </p>
-                        <Separator className='font-bold' />
+                        <Separator className='font-bold mb-5' />
                  </div>
                 ))}
                     <form onSubmit={handleSendMessage} className="flex space-x-2">
