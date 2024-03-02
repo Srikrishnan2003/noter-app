@@ -4,6 +4,8 @@ import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'reac
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 
 import {
     GoogleGenerativeAI,
@@ -12,6 +14,7 @@ import {
   } from "@google/generative-ai";
 import { Spinner } from '@/components/spinner';
 import { Separator } from '@/components/ui/separator';
+import remarkGfm from 'remark-gfm';
 
 
 const Chatbot: React.FC = () => {
@@ -23,12 +26,32 @@ const Chatbot: React.FC = () => {
     const [responses, setResponses] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const chatbotRef = useRef<HTMLDivElement | null>(null);
-    
 
+    const inputRef = useRef<HTMLInputElement | null>(null);
+
+    useEffect(() => {
+        // Focus on the input box when the component is mounted or isExpanded state changes
+        if (isExpanded && inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, [isExpanded]);
+    
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
     };
+
+    const handleCopyToClipboard = () => {
+        const coachResult = responses.join('\n\n');
+        navigator.clipboard.writeText(coachResult)
+          .then(() => {
+            alert('Coach result copied to clipboard!');
+          })
+          .catch((error) => {
+            console.error('Clipboard write failed:', error);
+            alert('Failed to copy coach result to clipboard');
+          });
+      };
     
 
     const handleSendMessage = async (e: FormEvent) => {
@@ -81,8 +104,9 @@ const Chatbot: React.FC = () => {
         
           const result = await chat.sendMessage(inputValue);
           const response = result.response;
-          console.log(response.text());
-          setResponses(prevResponses => [...prevResponses,`${inputValue}`, result.response.text()]);
+          console.log(result);
+          const markdownResponse = response.text();
+          setResponses(prevResponses => [...prevResponses,`${inputValue}`, markdownResponse]);
         }
         
         try{
@@ -178,25 +202,29 @@ const Chatbot: React.FC = () => {
                                 <span className="text-gray-600 dark:text-gray-400">Me:<br /></span>
                             ):(
                         <span className="text-gray-600 dark:text-gray-400">Coach:</span>
+                        
                             )}
-                        <p className="text-gray-800 dark:text-white break-words">
+                        <p className="text-gray-800 dark:text-white break-words p-2">
                             
                            
-                        {response.split('\n').map((line, lineIndex) => (
-                            <React.Fragment key={lineIndex}>
-                                <ReactMarkdown>
-                                {line}
-                                </ReactMarkdown>
-                                <br />
-                            </React.Fragment>
-                        ))}
-                            
+                        <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            >{response}
+                        </ReactMarkdown>
                         </p>
+                        <div key={index} className="flex justify-end mt-1 mb-2">
+                            { index % 2 !== 0 &&
+                            <Button onClick={handleCopyToClipboard} className="bg-[#1F1F1F] text-white px-4 py-2 rounded" variant="ghost">
+                                Copy Coach Result
+                            </Button>
+                            }
+                        </div>
                         <Separator className='font-bold mb-5' />
                  </div>
                 ))}
                     <form onSubmit={handleSendMessage} className="flex space-x-2">
                     <input
+                        ref={inputRef}
                         type="text"
                         placeholder="Questions ready? Fire away! 🚀"
                         value={inputValue}
@@ -205,6 +233,7 @@ const Chatbot: React.FC = () => {
                         />
                     
                     <input
+                        ref={inputRef}
                         type="text"
                         placeholder="Questions ready? Fire away! 🚀"
                         value={inputValue}

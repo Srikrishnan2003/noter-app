@@ -31,7 +31,7 @@ export const UserItem = () => {
                         </span>
 
                     </div>
-                <ChevronsLeftRight className="rotate-90 ml-2 text-muted-foreground h-4 w-4" />
+                <ChevronsLeftRight className="flex rotate-90 ml-2 text-muted-foreground h-4 w-4" />
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -40,7 +40,7 @@ export const UserItem = () => {
             alignOffset={11}
             forceMount
             >
-                <div className="flex flex-col space-y-4 p-2">
+                <div className="flex-col space-y-4 p-2">
                     <p className="text-xs font-medium leading-none text-muted-foreground">
                         {user?.emailAddresses[0].emailAddress}
                     </p>
